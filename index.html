@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0d1117">
+  <title>Ultimate Stat Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Portrait rotation notice -->
+<div id="portrait-warn">
+  <div class="portrait-icon">📱↔️</div>
+  <div class="portrait-text">Rotate to landscape<br>to use the tracker</div>
+</div>
+
+<!-- Main app -->
+<div id="app">
+
+  <!-- Header -->
+  <header id="header">
+    <h1>⬡ UltiStats</h1>
+
+    <div class="score-board">
+      <div style="display:flex;align-items:center;gap:4px">
+        <div id="poss-dot-0" class="possession-dot active"></div>
+        <div class="score-team">
+          <div class="score-name" data-team="0">Team A</div>
+          <div class="score-num t0" id="score-0">0</div>
+        </div>
+      </div>
+      <div class="score-sep">:</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <div class="score-team">
+          <div class="score-name" data-team="1">Team B</div>
+          <div class="score-num t1" id="score-1">0</div>
+        </div>
+        <div id="poss-dot-1" class="possession-dot"></div>
+      </div>
+    </div>
+
+    <button id="btn-undo">↩ Undo</button>
+    <button id="btn-reset">Reset</button>
+  </header>
+
+  <!-- Team panels -->
+  <main id="main">
+    <div class="team-panel" data-team="0">
+      <div class="team-header t0">
+        <span class="team-label t0" data-team="0">Storm</span>
+        <span class="possession-badge" id="poss-0">POSSESSION</span>
+      </div>
+      <div class="player-grid"></div>
+    </div>
+
+    <div class="team-panel" data-team="1">
+      <div class="team-header t1">
+        <span class="team-label t1" data-team="1">Blaze</span>
+        <span class="possession-badge" id="poss-1">POSSESSION</span>
+      </div>
+      <div class="player-grid"></div>
+    </div>
+  </main>
+
+  <!-- Event log sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <span>Events</span>
+      <button id="export-btn">Export</button>
+    </div>
+    <div id="event-log"></div>
+  </aside>
+
+</div><!-- /app -->
+
+<!-- Action modal -->
+<div id="action-overlay">
+  <div id="action-modal">
+    <div class="modal-player-name">Player Name</div>
+    <div class="action-grid">
+      <button class="action-btn pass"  data-action="pass">
+        <span class="icon">🥏</span>Pass
+      </button>
+      <button class="action-btn goal"  data-action="goal">
+        <span class="icon">🎯</span>Goal
+      </button>
+      <button class="action-btn block" data-action="block">
+        <span class="icon">🛡️</span>D-Block
+      </button>
+      <button class="action-btn throw" data-action="throwaway">
+        <span class="icon">❌</span>Throwaway
+      </button>
+      <button class="action-btn drop"  data-action="drop">
+        <span class="icon">⚠️</span>Drop
+      </button>
+      <button class="action-btn pull"  data-action="pull">
+        <span class="icon">🚀</span>Pull
+      </button>
+    </div>
+    <button class="modal-cancel" id="modal-cancel">Cancel</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
