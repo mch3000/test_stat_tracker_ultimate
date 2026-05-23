@@ -12,102 +12,198 @@
 </head>
 <body>
 
-<!-- Portrait rotation notice -->
+<!-- Portrait warning -->
 <div id="portrait-warn">
-  <div class="portrait-icon">📱↔️</div>
-  <div class="portrait-text">Rotate to landscape<br>to use the tracker</div>
+  <div class="icon">📱↔️</div>
+  <p>Rotate to landscape<br>to use the tracker</p>
 </div>
 
-<!-- Main app -->
-<div id="app">
+<!-- Root -->
+<div id="root">
 
-  <!-- Header -->
+  <!-- ── HEADER ─────────────────────────────────────────────── -->
   <header id="header">
     <h1>⬡ UltiStats</h1>
 
-    <div class="score-board">
-      <div style="display:flex;align-items:center;gap:4px">
-        <div id="poss-dot-0" class="possession-dot active"></div>
-        <div class="score-team">
-          <div class="score-name" data-team="0">Team A</div>
-          <div class="score-num t0" id="score-0">0</div>
-        </div>
+    <div class="scoreboard">
+      <div id="poss-dot-0" class="poss-dot"></div>
+      <div class="sb-team">
+        <div class="sb-name" id="sb-name-0">Team A</div>
+        <div class="sb-score t0" id="sb-score-0">0</div>
       </div>
-      <div class="score-sep">:</div>
-      <div style="display:flex;align-items:center;gap:4px">
-        <div class="score-team">
-          <div class="score-name" data-team="1">Team B</div>
-          <div class="score-num t1" id="score-1">0</div>
-        </div>
-        <div id="poss-dot-1" class="possession-dot"></div>
+      <div class="sb-sep">:</div>
+      <div class="sb-team">
+        <div class="sb-name" id="sb-name-1">Team B</div>
+        <div class="sb-score t1" id="sb-score-1">0</div>
       </div>
+      <div id="poss-dot-1" class="poss-dot"></div>
     </div>
 
-    <button id="btn-undo">↩ Undo</button>
-    <button id="btn-reset">Reset</button>
+    <span id="state-badge" class="state-badge">Line Selection</span>
+
+    <div class="hdr-actions">
+      <button id="btn-event" class="hdr-btn accent" style="display:none">⚡ Event</button>
+      <button id="btn-undo"  class="hdr-btn" style="display:none">↩ Undo</button>
+      <button id="btn-reset" class="hdr-btn danger">Reset</button>
+    </div>
   </header>
 
-  <!-- Team panels -->
-  <main id="main">
-    <div class="team-panel" data-team="0">
-      <div class="team-header t0">
-        <span class="team-label t0" data-team="0">Storm</span>
-        <span class="possession-badge" id="poss-0">POSSESSION</span>
+  <!-- ── SCREEN: LINE SELECTION ─────────────────────────────── -->
+  <div id="screen-linesel" class="screen">
+    <div style="display:flex;flex-direction:column;width:100%;overflow:hidden;">
+
+      <div class="linesel-header">
+        <span class="linesel-title" id="linesel-title">Point 1 — Select Lines</span>
+        <div id="pull-team-row" style="display:none;align-items:center;gap:6px;margin-left:8px;"></div>
+        <span class="linesel-note">Select players for this point (7 each)</span>
+        <button class="linesel-confirm" id="linesel-confirm" disabled>Confirm Lines →</button>
       </div>
-      <div class="player-grid"></div>
-    </div>
 
-    <div class="team-panel" data-team="1">
-      <div class="team-header t1">
-        <span class="team-label t1" data-team="1">Blaze</span>
-        <span class="possession-badge" id="poss-1">POSSESSION</span>
+      <div class="linesel-teams">
+        <!-- Team 0 -->
+        <div class="linesel-team">
+          <div class="linesel-team-hdr t0">
+            <span class="linesel-team-name t0">Storm</span>
+            <span class="linesel-count" id="linesel-count-0">0 / 7 selected</span>
+          </div>
+          <div class="roster-scroll" id="linesel-team-0"></div>
+        </div>
+        <!-- Team 1 -->
+        <div class="linesel-team">
+          <div class="linesel-team-hdr t1">
+            <span class="linesel-team-name t1">Blaze</span>
+            <span class="linesel-count" id="linesel-count-1">0 / 7 selected</span>
+          </div>
+          <div class="roster-scroll" id="linesel-team-1"></div>
+        </div>
       </div>
-      <div class="player-grid"></div>
-    </div>
-  </main>
 
-  <!-- Event log sidebar -->
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <span>Events</span>
-      <button id="export-btn">Export</button>
     </div>
-    <div id="event-log"></div>
-  </aside>
+  </div>
 
-</div><!-- /app -->
-
-<!-- Action modal -->
-<div id="action-overlay">
-  <div id="action-modal">
-    <div class="modal-player-name">Player Name</div>
-    <div class="action-grid">
-      <button class="action-btn pass"  data-action="pass">
-        <span class="icon">🥏</span>Pass
-      </button>
-      <button class="action-btn goal"  data-action="goal">
-        <span class="icon">🎯</span>Goal
-      </button>
-      <button class="action-btn block" data-action="block">
-        <span class="icon">🛡️</span>D-Block
-      </button>
-      <button class="action-btn throw" data-action="throwaway">
-        <span class="icon">❌</span>Throwaway
-      </button>
-      <button class="action-btn drop"  data-action="drop">
-        <span class="icon">⚠️</span>Drop
-      </button>
-      <button class="action-btn pull"  data-action="pull">
-        <span class="icon">🚀</span>Pull
-      </button>
+  <!-- ── SCREEN: PULLING ────────────────────────────────────── -->
+  <div id="screen-pulling" class="screen">
+    <div style="width:100%;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="pulling-title">Who is pulling?</div>
+      <div class="pulling-team-label" id="pulling-team-label"></div>
+      <div class="pulling-grid" id="pulling-grid"></div>
     </div>
+  </div>
+
+  <!-- ── SCREEN: GAME (Pass Chain / Block Pick) ─────────────── -->
+  <div id="screen-game" class="screen">
+
+    <!-- Player zone -->
+    <div id="player-zone">
+      <div class="pz-header">
+        <span class="pz-team-name">Team</span>
+        <span class="pz-hint">Tap player to record action</span>
+      </div>
+      <div class="player-zone-grid"></div>
+    </div>
+
+    <!-- Event log sidebar -->
+    <aside id="game-sidebar">
+      <div class="sidebar-hdr">
+        <span>Events</span>
+        <button id="export-btn">Export</button>
+      </div>
+      <div id="event-log"></div>
+    </aside>
+
+  </div>
+
+  <!-- ── SCREEN: END GAME ───────────────────────────────────── -->
+  <div id="screen-endgame" class="screen">
+    <div class="eg-title">Game Over</div>
+    <div class="eg-score">
+      <span class="t0"><span id="eg-t0">Storm</span> <span id="eg-score-0">0</span></span>
+      &nbsp;–&nbsp;
+      <span class="t1"><span id="eg-score-1">0</span> <span id="eg-t1">Blaze</span></span>
+    </div>
+    <div class="eg-actions">
+      <button class="eg-btn primary" id="eg-export">⬇ Export Stats</button>
+      <button class="eg-btn" id="eg-newgame">New Game</button>
+    </div>
+  </div>
+
+</div><!-- /root -->
+
+<!-- ── PLAYER ACTION MODAL ────────────────────────────────────── -->
+<div id="overlay">
+  <div id="modal">
+    <div class="modal-pname" id="modal-pname">Player</div>
+    <div class="modal-hint" id="modal-hint"></div>
+    <div class="action-grid cols3" id="action-grid"></div>
     <button class="modal-cancel" id="modal-cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- ── EVENT MENU ─────────────────────────────────────────────── -->
+<div id="event-menu-overlay">
+  <div id="event-menu">
+    <h3>Special Events</h3>
+
+    <div class="ev-item" id="ev-item-injury">
+      <span class="ev-ic">🩹</span>
+      <div class="ev-item-body">
+        <div class="ev-item-label">Injury Sub</div>
+        <div class="ev-item-desc">Replace a player mid-point</div>
+      </div>
+    </div>
+
+    <div class="ev-item" id="ev-item-halftime">
+      <span class="ev-ic">⏱️</span>
+      <div class="ev-item-body">
+        <div class="ev-item-label">Half Time</div>
+        <div class="ev-item-desc">Switch ends; flip possession</div>
+      </div>
+    </div>
+
+    <div class="ev-item" id="ev-item-endgame">
+      <span class="ev-ic">🏁</span>
+      <div class="ev-item-body">
+        <div class="ev-item-label">End Game</div>
+        <div class="ev-item-desc">Close session and export</div>
+      </div>
+    </div>
+
+    <div class="ev-item" id="ev-item-close" style="justify-content:center;color:var(--muted)">
+      <div class="ev-item-label">Cancel</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── INJURY SUB MODAL ───────────────────────────────────────── -->
+<div id="sub-overlay">
+  <div id="sub-modal">
+    <h3>🩹 Injury Substitution</h3>
+    <p class="sub-hint">Select team, then the player going off and the player coming on.</p>
+
+    <div class="sub-step">
+      <div class="sub-step-label">Team</div>
+      <div class="sub-player-list" id="sub-team-row" style="grid-template-columns:1fr 1fr;"></div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-label">Player Off (on field)</div>
+      <div class="sub-player-list" id="sub-out-list"></div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-label">Player On (bench)</div>
+      <div class="sub-player-list" id="sub-in-list"></div>
+    </div>
+
+    <div class="sub-actions">
+      <button class="sub-cancel" id="sub-cancel">Cancel</button>
+      <button class="sub-confirm" id="sub-confirm" disabled>Confirm Sub</button>
+    </div>
   </div>
 </div>
 
 <script src="app.js"></script>
 <script>
-  // Register service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
